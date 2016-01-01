@@ -1,3 +1,4 @@
+# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,13 +11,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 1) do
+ActiveRecord::Schema.define(version: 20160101205059) do
 
-  create_table "landmarks", force: true do |t|
-    t.string   "name"
-    t.integer  "year_completed"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table "friendships", force: :cascade do |t|
+    t.integer "follower_id"
+    t.integer "friend_id"
+    t.integer "trust_level"
+  end
+
+  add_index "friendships", ["follower_id"], name: "index_friendships_on_follower_id"
+  add_index "friendships", ["friend_id"], name: "index_friendships_on_friend_id"
+
+  create_table "posts", force: :cascade do |t|
+    t.text    "title"
+    t.text    "body"
+    t.integer "user_id"
+    t.integer "topic_id"
+    t.integer "precedent_id"
+  end
+
+  add_index "posts", ["topic_id"], name: "index_posts_on_topic_id"
+  add_index "posts", ["user_id"], name: "index_posts_on_user_id"
+
+  create_table "users", force: :cascade do |t|
+    t.text "name"
+    t.text "email"
+    t.text "description"
   end
 
 end
