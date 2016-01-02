@@ -4,6 +4,12 @@ module Sociable
     self.class.centrality_list[self.id]
   end
 
+  def destroy_full
+    self.friends.destroy_all
+    self.followers.destroy_all
+    self.destroy
+  end
+
 end
 
 

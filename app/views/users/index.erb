@@ -1,0 +1,34 @@
+<h1>Listing All Users</h1>
+
+<table>
+  <tr>
+    <th>
+      Name
+    </th>
+    <th>
+      Email
+    </th>
+    <th>
+      Betweenness Centrality
+    </th>
+  </tr>
+
+  <% User.all.each do |user|%>
+  <tr>
+    <td>
+      <a href="/users/<%= user.id %>">
+        <%= user.name %>
+      </a>
+    </td>
+    <td>
+      <%= user.email %>
+    </td>
+    <td>
+      <%=  sprintf('%.2f', user.betweenness_centrality ) %>
+    </td>
+  </tr>
+  <% end %>
+
+
+
+</table>

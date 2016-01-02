@@ -1,0 +1,28 @@
+<h2>User Profile For <%=@user.name%></h2>
+
+<form action="/users/<%= @user.id %>/edit" method="get">
+  <input type="submit" value="Edit Profile">
+</form>
+
+
+<h3>Description</h3>
+
+  <p>
+  <%= @user.description %>
+  </p>
+
+<h3>My Friends</h3>
+
+<p>
+  <% @user.friends.each do |friend|  %>
+  <%= erb :"users/_user_link", :locals => { user:friend } %>
+  <% end %>
+</p>
+
+<h3>My Followers</h3>
+
+<p>
+  <% @user.followers.each do |follower|  %>
+  <%= erb :"users/_user_link", :locals => { user:follower } %>
+  <% end %>
+</p>

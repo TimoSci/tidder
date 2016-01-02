@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 # brandes algorithm for betweenness centrality. http://www.cs.ucc.ie/~rb4/resources/Brandes.pdf
+#require 'pry'
 
 # neighbours = {
 # 	0=>[6,7,8,9,11,12],
@@ -14,40 +15,83 @@
 # 	9=>[10,11,12,0,8],
 # 	10=>[11,7,9],
 # 	11=>[12,0,8,9,10],
-# 	12=>[0,7,9,11]
+# 	12=>[0,7,9,11],
 # }
 
 
 class Graph
 
-	attr_accessor :neighbours
+	attr_accessor :neighbours, :mapping
 
 	def initialize(neighbours)
 		@neighbours = neighbours
+		@mapping = neighbours.map{|k,v| [k,k]}.to_h
+    remove_dangling
+    normalize_neighbours
+		symmetrize_neighbours
+	end
+
+	def symmetrize_neighbours
+		out = {}
+		neighbours.each do |key,list|
+			list.each do |friend|
+				out[friend] ||= []
+				out[friend] |= [key]
+			end
+			out[key] ||= []
+			out[key] |= list
+		end
+		@neighbours = out
+	end
+
+	def remove_dangling
+		out = neighbours.map do |key,list|
+			[
+				key,
+				list.select{|x| neighbours.keys.include? x}
+			]
+		end.to_h
+		@neighbours = out
+	end
+
+	def normalize_neighbours
+		out= {}
+		neighbours.keys.sort.each_with_index do |key,i|
+			@mapping[key] = i
+		end
+		neighbours.each do |key,list|
+			out[mapping[key]] = list.map{|n| mapping[n]}
+		end
+		@neighbours = out
 	end
 
   #TODO write a proper normalization algorithm rather than this clutch
-	def normalized_neighbours
-	  neighbours.map do |k,list|
-      [
-			  k-1,
-				list.map{|n| n-1}
-			]
-    end.to_h
-  end
+	# def normalized_neighbours
+	#   neighbours.map do |k,list|
+  #     [
+	# 		  k-1,
+	# 			list.map{|n| n-1}
+	# 		]
+  #   end.to_h
+  # end
 
-	def denormalized_keys(myhash)
-		myhash.map do |k,list|
-			[
-				k+1,
-				list
-			]
-		end.to_h
+	# def denormalized_keys(myhash)
+	# 	myhash.map do |k,list|
+	# 		[
+	# 			k+1,
+	# 			list
+	# 		]
+	# 	end.to_h
+	# end
+
+  def map_back(myhash)
+		m = mapping.invert
+		myhash.map{|k,v| [m[k] , v ]}.to_h
 	end
 
 	def betweenness_centrality
 
-    neighbours = normalized_neighbours
+
 		neighbours.each do |key,values|
 			values.each do |value|
 				raise "#{key},#{value}" unless neighbours[value].include? key
@@ -104,11 +148,12 @@ class Graph
 			out[idx] = n
 		end
 
-		return denormalized_keys(out)
+		return map_back(out)
 
 	end
 
 end
 
-# g = Graph.new(neighbours)
-# puts g.betweenness_centrality
+ # g = Graph.new(neighbours)
+ # binding.pry
+ # puts g.betweenness_centrality
