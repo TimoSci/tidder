@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160101205059) do
+ActiveRecord::Schema.define(version: 20160102212515) do
 
   create_table "friendships", force: :cascade do |t|
     t.integer "follower_id"
@@ -32,6 +32,16 @@ ActiveRecord::Schema.define(version: 20160101205059) do
 
   add_index "posts", ["topic_id"], name: "index_posts_on_topic_id"
   add_index "posts", ["user_id"], name: "index_posts_on_user_id"
+
+  create_table "topics", force: :cascade do |t|
+    t.text    "name"
+    t.text    "about"
+    t.integer "user_id"
+    t.integer "parent_id"
+  end
+
+  add_index "topics", ["parent_id"], name: "index_topics_on_parent_id"
+  add_index "topics", ["user_id"], name: "index_topics_on_user_id"
 
   create_table "users", force: :cascade do |t|
     t.text "name"
