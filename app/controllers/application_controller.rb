@@ -13,20 +13,19 @@ class ApplicationController < Sinatra::Base
       "/#{object.class.to_s.downcase.pluralize}/#{id}"
     end
 
-    def tree_tags(object,&block)  # creates a tree of nested html tags
+    def tree_tags(object)  # creates a tree of nested html tags
 
-      get_tree_inner = lambda { |object|
+      tree_inner = lambda { |object|
         yield object,:start
         yield object,nil
         if object.has_children?
            object.children.each do |c|
-              get_tree_inner.call(c)
+              tree_inner.call(c)
            end
         end
         yield object,:end
       }
-
-      get_tree_inner.call(object)
+      tree_inner.call(object)
     end
 
   end

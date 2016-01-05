@@ -3,7 +3,6 @@ class Topic < ActiveRecord::Base
   include Slug
   extend SlugClass
 
-  # include ParentableAssociations
   include Parentable
   extend ParentableClass
 
