@@ -35,4 +35,9 @@ class UsersController < ApplicationController
     redirect "/users"
   end
 
+  get '/users/:id/new_post' do
+    @user = User.find(params[:id])
+    erb :"posts/new"
+  end
+
 end

@@ -1,0 +1,25 @@
+/* TREE */
+
+
+.tree {
+margin:0.5em;
+}
+
+.on {
+background-color:rgba(256,256,256,0.1);
+}
+
+input.tree ~ div { }
+input.tree:checked ~ div { display: none; }
+
+input.tree:checked + label.tree { color: blue; }
+
+input.tree         + label.tree span#plus { display:none; }
+input.tree:checked + label.tree span#minus { display:none; }
+input.tree:checked + label.tree span#plus { display:initial; }
+
+input.tree { display: none; }
+
+.treerow{
+ display:inline;
+}

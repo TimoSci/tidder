@@ -1,4 +1,10 @@
-<h2>User Profile For <%=@user.name%></h2>
+<h2>Dashboard For <%=@user.name%></h2>
+
+<form action="/users/<%= @user.id %>/new_post" method="get">
+  <input type="submit" value="New Post">
+</form>
+
+<br/>
 
 <form action="/users/<%= @user.id %>/edit" method="get">
   <input type="submit" value="Edit Profile">
@@ -26,3 +32,30 @@
   <%= erb :"users/_user_link", :locals => { user:follower } %>
   <% end %>
 </p>
+
+<h3>My Posts</h3>
+
+<ul>
+
+<% @user.posts.each do |post|  %>
+
+<li>
+  <form action="/posts/<%= post.id %>/delete" method="post">
+  <%= post.title %>
+     <input type="submit" value="delete">
+  </form>
+</li>
+
+<% end  %>
+
+</ul>
+
+<h3>My Friend's posts</h3>
+
+<% @user.friends.inject([]){|memo,friend| memo + friend.posts}.each do |post| %>
+
+<p>
+  <%= erb :"posts/_post_summary", :locals => { post:post } %>
+</p>
+
+<% end %>

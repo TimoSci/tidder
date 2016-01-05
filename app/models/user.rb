@@ -9,5 +9,6 @@ class User < ActiveRecord::Base
   has_many :followers, through: :followships
 
   has_many :posts
+  has_many :topics
 
 end

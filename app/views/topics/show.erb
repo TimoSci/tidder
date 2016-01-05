@@ -1,0 +1,18 @@
+<h1> <%= @topic.longname %> |  <a href="/topics/<%= @topic.slug %>/edit">Edit Topic</a> </h1>
+
+
+
+<p>
+  <%= @topic.about %>
+</p>
+
+<h2> Posts </h2>
+
+<% @posts.each do |post| %>
+
+<p>
+  <%= erb :"posts/_post_summary", :locals => { post:post } %>
+  <!-- <a href="/topics/<%= post.topic.slug %>"><%= post.topic.name %></a>  : <a href="/users/<%= post.user.id%>"> <%= post.user.name %> </a> : <%= post.title %> -->
+</p>
+
+<% end %>

@@ -2,20 +2,22 @@
 graph = {
 	0=>[6,7,8,9,11,12],
 	1=>[2,3,4,5],
-	2=>[3,4,5,1],
+	2=>[3,4,1],
 	3=>[1,2,6,4,5],
 	4=>[5,1,2,3,6],
-	5=>[1,2,3,4],
-	6=>[4,3,7,0],
+	5=>[1,2,4],
+	6=>[4,3,0],
 	7=>[6,8,10,12,0],
-	8=>[9,11,0,7],
-	9=>[10,11,12,0,8],
+	8=>[9,1,0,7],
+	9=>[10,1,0,8],
 	10=>[11,7,9],
-	11=>[12,0,8,9,10],
+	11=>[12,0,9,10],
 	12=>[0,7,9,11]
 }
 
-user_names = %w(Alice Bob Charlie Dartha Emma Fred Gabriel Harry Ian Julia Kat Ludwig Maria)
+
+
+user_names = %w(Alice Bob Charlie Dartha Emma Fred Gabriel Harry Ian Julia Kat Leo Maria)
 
 user_list = graph.map do |k,friends|
   [
@@ -37,3 +39,47 @@ User.all.each do |user|
     user.save
   end
 end
+
+
+# Topic hierarchy
+
+Topic.create(name:"ROOT")
+
+t1 = Topic.new(name:"science",user_id:1)
+t1.save
+t11 = Topic.new(name:"physics",user_id:2)
+t11.parent = t1
+t11.save
+t12 = Topic.new(name:"biology",user_id:1)
+t12.parent = t1
+t12.save
+t13 = Topic.new(name:"psychology",user_id:3)
+t13.parent = t1
+t13.save
+t111 = Topic.new(name:"astrophysics",user_id:4)
+t111.parent = t11
+t111.save
+t2 = Topic.new(name:"news",user_id:5)
+t2.save
+t21 = Topic.new(name:"world",user_id:2)
+t21.parent = t2
+t21.save
+t22 = Topic.new(name:"tech",user_id:2)
+t22.parent = t2
+t22.save
+t221 = Topic.new(name:"gaming",user_id:2)
+t221.parent = t22
+t221.save
+
+Post.create(topic:t1,user_id:1,title:"Brain circuit involved in antidepressant effect of ketamine identified")
+Post.create(topic:t1,user_id:2,title:"Researchers find magnesium intake may be beneficial in preventing pancreatic cancer.")
+Post.create(topic:t1,user_id:3,title:"Marijuana derivative reduces seizures in people with treatment-resistant epilepsy")
+Post.create(topic:t11,user_id:1,title:"All about Earth’s Gravity")
+Post.create(topic:t11,user_id:4,title:"Heat radiates 10,000 times faster at the nanoscale")
+Post.create(topic:t11,user_id:2,title:"Witten introduces M-theory in 1995")
+Post.create(topic:t13,user_id:2,title:"Brain circuit involved in antidepressant effect of ketamine identified")
+Post.create(topic:t13,user_id:4,title:"A Point of View: Is there any such thing as a wise person?")
+Post.create(topic:t13,user_id:1,title:"Religion’s evolutionary landscape: Counterintuition, commitment, compassion, communion")
+Post.create(topic:t111,user_id:2,title:"LISA Pathfinder will pave the way for us to ‘see’ black holes for the first time")
+Post.create(topic:t111,user_id:4,title:"Giant galaxies die from the inside out: Star formation shuts down in the centers of elliptical galaxies first.")
+Post.create(topic:t111,user_id:5,title:"Is it possible for a moon to orbit a planet more slowly than the planet orbits the system center?")

@@ -13,7 +13,7 @@
     </th>
   </tr>
 
-  <% User.all.each do |user|%>
+  <% User.all.sort_by{|user| -user.betweenness_centrality}.each do |user|%>
   <tr>
     <td>
       <a href="/users/<%= user.id %>">

@@ -10,6 +10,9 @@ gem 'tux'
 gem 'pry'
 gem 'rake'
 gem 'require_all'
+
+gem 'rgl'
+
 # gem 'rspec'
 # gem 'rack-test'
 # gem 'sinatra-twitter-bootstrap', :require => 'sinatra/twitter-bootstrap'

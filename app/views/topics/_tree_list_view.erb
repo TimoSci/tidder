@@ -1,0 +1,35 @@
+
+<% parentables.orphans.each do |parentable| %>
+<% tree_tags(parentable) do |object,tag| %>
+
+ <% if tag == :start %>
+   <div class='tree'>
+ <% elsif tag == :end %>
+   </div>
+ <% end %>
+
+ <% if not tag %>
+
+
+         <% object.level.times do%>
+         &nbsp;&nbsp;&nbsp;&nbsp;
+         <%end%>
+
+
+      <input type=checkbox class=tree value=1 id=<%=object.id%> >
+
+
+      <% if object.has_children? %>
+         <label class=tree for=<%=object.id%>>[<span id='plus'>+</span><span id='minus'>&ndash;</span>]</label>
+      <% else %>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <% end %>
+
+      <%# Row content goes here%>
+      <%= erb :"topics/_tree_list_row", :locals => { object:object } %>
+
+
+ <% end %>
+
+<%end%>
+<%end%>

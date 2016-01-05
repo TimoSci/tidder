@@ -1,0 +1,7 @@
+<% User.all.each do |user|  %>
+  <label>
+  <input type="checkbox" name="user[friend_ids][]" value="<%= user.id%>" <%= "checked" if @user.friends.include?(user)%> >
+  <%= user.name %>
+  </label>
+  <br/>
+<% end %>

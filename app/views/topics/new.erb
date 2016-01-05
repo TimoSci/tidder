@@ -1,0 +1,30 @@
+<h2>New <%= @parent ? "Sub-" : "Top-Level " %>Topic</h2>
+
+<form action="/topics" method="post">
+
+  <h3>Topic Name:</h3>
+
+  <input type="text" name="name">
+
+  <h3>About:</h3>
+
+  <textarea name="about" rows="8" cols="40"></textarea>
+
+  <h3>Select Owner:</h3>
+
+
+    <% User.all.each do |user|  %>
+      <label>
+       <input type="radio" name="user_id" value="<%= user.id%>"  >
+       <%= user.name %>
+      </label>
+      <br/>
+    <% end %>
+
+    <br/>
+
+   <input type="hidden" name="parent_id" value="<%=@parent.id if @parent%>">
+
+   <input type="submit" value="submit">
+
+</form>

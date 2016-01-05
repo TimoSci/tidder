@@ -1,0 +1,6 @@
+
+  <%topic = post.topic%>
+  <a href="/topics/<%= topic.slug if topic %>"><%= topic.name if topic %></a>  : <a href="/users/<%= post.user.id %>"> <%= post.user.name %> </a> :
+  <a href="/posts/<%= post.id %>">
+    <%= post.title %>
+  </a>

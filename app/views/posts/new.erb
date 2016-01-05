@@ -1,0 +1,35 @@
+<h1>Write Post</h1>
+
+
+<form action="/posts/users/<%=@user.id%>" method="post">
+
+  <h3>Title</h3>
+
+  <p>
+    <input type="text" name="post[title]">
+  </p>
+
+  <h3>Content</h3>
+
+  <p>
+    <textarea name="post[body]" rows="8" cols="40"></textarea>
+  </p>
+
+
+<h2>Select Topic</h2>
+
+
+<% Topic.all.each do |topic| %>
+  <label>
+  <input type="radio" name="post[topic_id]" value="<%= topic.id%>">
+  <%= topic.longname %>
+  </label>
+  <br/>
+<% end  %>
+
+<br/>
+
+<input type="submit" value="Submit Post">
+
+
+</form>

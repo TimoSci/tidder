@@ -1,0 +1,24 @@
+<h1>Topics</h1>
+
+<a href="/topics/new">New top level topic</a>
+
+
+
+<h3>Tree View</h3>
+
+<%= erb :"topics/_tree_list_view", :locals => { parentables: Topic.all } %>
+
+<h3>List View</h3>
+
+
+<ul>
+
+  <% Topic.all.each do |topic|  %>
+     <li>
+       <a href="/topics/<%= topic.slug %>">
+         <%= topic.longname %>
+       </a>
+     </li>
+  <% end %>
+
+</ul>

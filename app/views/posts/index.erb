@@ -1,0 +1,9 @@
+<h1> All Posts </h1>
+
+<% Post.all.each do |post| %>
+
+<p>
+  <%= erb :"posts/_post_summary", :locals => { post:post } %>
+</p>
+
+<%end%>
