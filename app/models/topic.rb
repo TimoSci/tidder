@@ -3,14 +3,15 @@ class Topic < ActiveRecord::Base
   include Slug
   extend SlugClass
 
+  # include ParentableAssociations
   include Parentable
   extend ParentableClass
 
   has_many :posts
   belongs_to :user
 
-  belongs_to :parent, class_name: "Topic"
-  has_many :children, class_name: "Topic", foreign_key: "parent_id"
+  belongs_to :parent, class_name: self.to_s
+  has_many :children, class_name: self.to_s, foreign_key: "parent_id"
 
   def owner
     user

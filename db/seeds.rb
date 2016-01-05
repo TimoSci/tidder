@@ -83,3 +83,14 @@ Post.create(topic:t13,user_id:1,title:"Religion’s evolutionary landscape: Coun
 Post.create(topic:t111,user_id:2,title:"LISA Pathfinder will pave the way for us to ‘see’ black holes for the first time")
 Post.create(topic:t111,user_id:4,title:"Giant galaxies die from the inside out: Star formation shuts down in the centers of elliptical galaxies first.")
 Post.create(topic:t111,user_id:5,title:"Is it possible for a moon to orbit a planet more slowly than the planet orbits the system center?")
+
+
+p = Post.create(topic:t11,user_id:1,title:"String Theory Explained")
+c1 = p.comments.create(text:"'Almost infinite' ... so not at all infinite.",user_id:2)
+c2 = p.comments.create(text:"Transfinite",user_id:2,parent:c1)
+c3 = p.comments.create(text:"it's like 'a little pregnant'",user_id:3,parent:c1)
+c4 = p.comments.create(text:"'Googol' in this context",user_id:4,parent:c1)
+c5 = p.comments.create(text:"Eh; in his preprint he spelled it that way. Google was an accidental misspelling of googol",user_id:5,parent:c4)
+c6 = p.comments.create(text:"You're dumb",user_id:6,parent:c5)
+c6 = p.comments.create(text:"No YOU are dumb sir",user_id:5,parent:c6)
+c7 = p.comments.create(text:"Pffff...",user_id:6,parent:c6)

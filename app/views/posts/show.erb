@@ -9,4 +9,7 @@ by <a href="/users/<%= @post.user.id %>"> <%= @post.user.name %> </a>
   <%= @post.body %>
 </p>
 
-<h2>Comments</h2>
+<h2><%= @post.comments.length %> Comments</h2>
+
+
+<%= erb :"topics/_tree_list_view", :locals => { parentables: @post.comments } %>
