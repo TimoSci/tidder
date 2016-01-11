@@ -1,0 +1,16 @@
+<h1>Sessions#new</h1>
+
+<h1>Log in</h1>
+
+<%= form_for @user, url: session_path do |f| %>
+  <div class="">
+    <%= f.label :username %>
+    <%= f.text_field :username %>
+  </div>
+  <div class="">
+    <%= f.label :password %>
+    <%= f.password_field :password %>
+  </div>
+  <%= f.submit "Log In" %>
+
+<% end %>

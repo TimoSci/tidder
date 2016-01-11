@@ -1,0 +1,18 @@
+<h1>Register New Account</h1>
+
+<%= form_for @user, url: session_path do |f| %>
+  <div class="">
+    <%= f.label :username %>
+    <%= f.text_field :username %>
+  </div>
+  <div class="">
+    <%= f.label :password %>
+    <%= f.password_field :password %>
+  </div>
+  <div class="">
+    <%= f.label :password_confirmation %>
+    <%= f.password_field :password_confirmation %>
+  </div>
+  <%= f.submit %>
+
+<% end %>

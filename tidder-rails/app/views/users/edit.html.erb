@@ -1,0 +1,45 @@
+<h1>Edit Profile for <%= @user.name %></h1>
+
+<%= form_for @user, method: "delete" do |f|%>
+
+  <%= f.submit "Delete Profile" %>
+
+<%end%>
+
+
+<form action="/users/<%=@user.id%>" method="patch">
+
+    <div>
+    <h2>Details</h2>
+      <h3>Email</h3>
+        <p>
+        <input type="text" name="user[email]" value="<%= @user.email%>">
+        </p>
+      <h3>
+        Description
+      </h3>
+      <p>
+        <textarea name="user[description]" rows="8" cols="40"><%=@user.description%></textarea>
+      </p>
+
+
+    </div>
+
+    <div>
+    <h2>Select Friends</h2>
+
+    <% User.all.each do |user|  %>
+      <label>
+      <input type="checkbox" name="user[friend_ids][]" value="<%= user.id%>" <%= "checked" if @user.friends.include?(user)%> >
+      <%= user.name %>
+      </label>
+      <br/>
+    <% end %>
+
+    </div>
+
+    <br/>
+
+    <input type="submit" value="save">
+
+</form>

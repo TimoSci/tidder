@@ -1,0 +1,61 @@
+<h2>Dashboard For <%=@user.name%></h2>
+
+<form action="/users/<%= @user.id %>/new_post" method="get">
+  <input type="submit" value="New Post">
+</form>
+
+<br/>
+
+<form action="/users/<%= @user.id %>/edit" method="get">
+  <input type="submit" value="Edit Profile">
+</form>
+
+
+<h3>Description</h3>
+
+  <p>
+  <%= @user.description %>
+  </p>
+
+<h3>My Friends</h3>
+
+<p>
+  <% @user.friends.each do |friend|  %>
+  <%= link_to friend.name, friend %>
+  <% end %>
+</p>
+
+<h3>My Followers</h3>
+
+<p>
+  <% @user.followers.each do |follower|  %>
+  <%= link_to follower.name, follower %>
+  <% end %>
+</p>
+
+<h3>My Posts</h3>
+
+<ul>
+
+<% @user.posts.each do |post|  %>
+
+<li>
+  <form action="/posts/<%= post.id %>/delete" method="post">
+  <%= post.title %>
+     <input type="submit" value="delete">
+  </form>
+</li>
+
+<% end  %>
+
+</ul>
+
+<h3>My Friend's posts</h3>
+
+<% @user.friends.inject([]){|memo,friend| memo + friend.posts}.each do |post| %>
+
+<p>
+  <%= render partial: "posts/post_summary", locals: { post: post } %>
+</p>
+
+<% end %>

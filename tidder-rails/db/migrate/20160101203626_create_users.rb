@@ -4,8 +4,9 @@ class CreateUsers < ActiveRecord::Migration
     create_table :users do |t|
       t.text :name
       t.text :username
-      t.text :email
       t.text :description
+      t.text :email
+      t.text :password_digest
     end
   end
 
