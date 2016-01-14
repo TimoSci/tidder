@@ -6,7 +6,7 @@ class CreatePosts < ActiveRecord::Migration
       t.text :body
       t.references :user, index: true
       t.references :topic, index: true
-      t.references :precedent
+      t.references :predecessor, index: true
     end
   end
 

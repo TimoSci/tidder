@@ -38,9 +38,10 @@ ActiveRecord::Schema.define(version: 20160105154236) do
     t.text    "body"
     t.integer "user_id"
     t.integer "topic_id"
-    t.integer "precedent_id"
+    t.integer "predecessor_id"
   end
 
+  add_index "posts", ["predecessor_id"], name: "index_posts_on_predecessor_id"
   add_index "posts", ["topic_id"], name: "index_posts_on_topic_id"
   add_index "posts", ["user_id"], name: "index_posts_on_user_id"
 

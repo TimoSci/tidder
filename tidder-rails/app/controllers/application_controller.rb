@@ -12,8 +12,12 @@ class ApplicationController < ActionController::Base
     !!current_user
   end
 
+  def s_authenticate(user)
+
+  end
 
 
-  
+
+
 
 end
