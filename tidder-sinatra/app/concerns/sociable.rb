@@ -15,6 +15,10 @@ end
 
 module SociableClass
 
+  def dot_file
+    all
+  end
+
   def graph
     g = all.map do |user|
       [ user.id,

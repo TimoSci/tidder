@@ -1,9 +1,0 @@
-<%=link_to object.name, {controller: controller, action:'edit', id:object.id} %>
-
-<%= link_to image_tag("make-more-below.svg",size:"16",alt:"New Descendant Function",id:"more-below") , {controller: controller, action: 'new', id: object.id} %>
-
-<%= destruction_link(object) %>
-
-<% if object.has_children? %>
-                  <%#= link_to image_tag("extinguish.svg",size:"12",alt:"Extinguish",id:"extinguish"), {action: 'destroy', id: object, extinguish:1}, method: :delete, data: { confirm: 'Delete function and all of its descendants? Are you sure?' }  %>
-<% end %>

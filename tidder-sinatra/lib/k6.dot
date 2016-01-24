@@ -14,4 +14,5 @@ graph {
   c -- e;
   c -- f;
   d -- f;
+  a [style=filled, fillcolor=red];
 }

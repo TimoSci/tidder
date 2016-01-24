@@ -33,4 +33,9 @@ module Peckable
     end
   end
 
+  def move_back
+    self.predecessor = self.predecessor.predecessor
+    self.predecessor.successor = self 
+  end
+
 end
