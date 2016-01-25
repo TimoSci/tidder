@@ -28,7 +28,7 @@ end.to_h
 
 
 user_list.values.each do |user_hash|
-  User.create(name: user_hash[:name])
+  User.create(name: user_hash[:name], password:"xxx", password_confirmation:"xxx")
 end
 
 #TODO build social network below independent of database ids
@@ -39,6 +39,14 @@ User.all.each do |user|
     user.save
   end
 end
+
+#
+
+Friendship.find_each do |friendship|
+  friendship.trust_level = 1 #(1..10).to_a.sample
+	friendship.save
+end
+
 
 
 # Topic hierarchy

@@ -1,6 +1,6 @@
-require 'rgl/adjacency'
-require 'rgl/dot'
-require 'rgl/implicit'
+# require 'rgl/adjacency'
+# require 'rgl/dot'
+# require 'rgl/implicit'
 
 class User < ActiveRecord::Base
 
@@ -19,6 +19,7 @@ class User < ActiveRecord::Base
   def to_s
     self.name
   end
+
 
   def self.digraph
     dg = RGL::DirectedAdjacencyGraph[]

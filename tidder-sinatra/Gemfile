@@ -11,7 +11,11 @@ gem 'pry'
 gem 'rake'
 gem 'require_all'
 
-gem 'rgl'
+gem 'rgl' , require: ['rgl/adjacency','rgl/dot', 'rgl/implicit']
+
+# require 'rgl/adjacency'
+# require 'rgl/dot'
+# require 'rgl/implicit'
 
 # gem 'rspec'
 # gem 'rack-test'

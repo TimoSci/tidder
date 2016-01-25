@@ -28,6 +28,7 @@ end.to_h
 
 
 user_list.values.each do |user_hash|
+	binding.pry
   User.create(name: user_hash[:name])
 end
 

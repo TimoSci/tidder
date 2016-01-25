@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'rgl' , require: ['rgl/adjacency','rgl/dot', 'rgl/implicit', 'rgl/dijkstra']
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.5'

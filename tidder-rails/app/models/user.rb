@@ -14,20 +14,57 @@ class User < ActiveRecord::Base
   has_many :topics
   has_many :comments
 
-  def scrypt_authenticate(password)
-    scrypt_password = SCrypt::Password.create(password)
-    self.authenticate(scrypt_password)
+  def to_s
+    self.name
   end
 
-  def scrypt_password=(password)
-    scrypt_password = SCrypt::Password.create(password)
-    self.password = scrypt_password
+  def self.digraph
+    dg = RGL::DirectedAdjacencyGraph[]
+    self.find_each do |user| # unlike #all, #find_each is an Enumerator that doesn't load the entire set of users into memory
+      dg.add_vertex(user)
+      user.friends.each do |friend|
+        dg.add_edge(user,friend)
+      end
+    end
+    dg
   end
 
-  def self.save_dot_file(filename)
+  def self.implicit_digraph
+    RGL::ImplicitGraph.new { |g|
+       g.vertex_iterator { |b|
+         User.find_each(&b)
+       }
+       g.adjacent_iterator { |x, b|
+         x.friends.each(&b)
+       }
+       g.directed = true
+    }
+  end
+
+  def self.edge_weights_map
+    Friendship.all.map do |friendship|
+      [
+        [
+        friendship.follower,
+        friendship.friend
+        ],
+        friendship.trust_level
+      ]
+    end.to_h
+  end
+
+  def dijkstra_shortest_path(target)
+    dg = self.class.digraph
+    ewm = self.class.edge_weights_map
+    dg.dijkstra_shortest_path(ewm,self,target)
+  end
+
+
+  def self.save_dot_file(filename="network")
     File.open("#{filename}.dot","w") do |f|
       f.write dot_file
     end
+    system "dot -Tsvg #{filename}.dot -o #{filename}.svg"
   end
 
   def self.dot_file
@@ -49,6 +86,18 @@ class User < ActiveRecord::Base
       end
     out << "}"
     out
+  end
+
+#============
+
+  def scrypt_authenticate(password)
+    scrypt_password = SCrypt::Password.create(password)
+    self.authenticate(scrypt_password)
+  end
+
+  def scrypt_password=(password)
+    scrypt_password = SCrypt::Password.create(password)
+    self.password = scrypt_password
   end
 
 end
