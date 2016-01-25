@@ -19,6 +19,7 @@ class User < ActiveRecord::Base
   end
 
   def self.digraph
+    return @digraph if @digraph #memoization
     dg = RGL::DirectedAdjacencyGraph[]
     self.find_each do |user| # unlike #all, #find_each is an Enumerator that doesn't load the entire set of users into memory
       dg.add_vertex(user)
@@ -26,7 +27,7 @@ class User < ActiveRecord::Base
         dg.add_edge(user,friend)
       end
     end
-    dg
+    @digraph = dg
   end
 
   def self.implicit_digraph
@@ -42,7 +43,8 @@ class User < ActiveRecord::Base
   end
 
   def self.edge_weights_map
-    Friendship.all.map do |friendship|
+    return @edge_weights_map if @edge_weights_map # memoization
+    @edge_weights_map = Friendship.all.map do |friendship|
       [
         [
         friendship.follower,
