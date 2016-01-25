@@ -55,12 +55,34 @@ class User < ActiveRecord::Base
     end.to_h
   end
 
+  def self.edge_capacities_map
+    self.edge_weights_map.map{|k,v|
+      [k,1/(v.to_f)]
+    }.to_h
+  end
+
+  def maximum_flow(sink)
+    #TODO convert directed graph to non-directed graph for this to work
+    dg = self.class.digraph
+    ewm = self.class.edge_weights_map
+    dg.maximum_flow(ewm,self,sink)
+  end
+
   def dijkstra_shortest_path(target)
     dg = self.class.digraph
     ewm = self.class.edge_weights_map
     dg.dijkstra_shortest_path(ewm,self,target)
   end
 
+  def distance(target)
+    path = self.dijkstra_shortest_path(target)
+    ewm = self.class.edge_weights_map
+    dist = 0
+    path.each_cons(2) do |pair|
+      dist += ewm[pair]
+    end
+    dist
+  end
 
   def self.save_dot_file(filename="network")
     File.open("#{filename}.dot","w") do |f|
