@@ -58,8 +58,7 @@ class User < ActiveRecord::Base
   def self.implicit_edge_weights_map(memo_size=0)
     lambda{|pair|
             #TODO add memoization hash here (basically an explicit edge weights map of a subset of frienships)
-            f = Friendship.find_by(follower:pair[0],friend_id:pair[1])
-            f && f.trust_level
+            f = Friendship.find_by(follower:pair[0],friend:pair[1]).try(:trust_level)
           }
   end
 
@@ -88,6 +87,25 @@ class User < ActiveRecord::Base
     dg.dijkstra_shortest_path(ewm,self,target)
   end
 
+  def betweenness_centrality
+    total = 0
+    self.class.find_each do |source|
+      self.class.find_each do |target|
+        path = source.dijkstra_shortest_path(target)
+        total += 1 if path.include?(self)
+      end
+    end
+    total
+  end
+
+  def self.centrality_list
+    out = ""
+    self.find_each do |user|
+      out << user.id.to_s + ": " + user.betweenness_centrality.to_s
+      out << "\n"
+    end
+    out
+  end
 
   def distance(target)
     path = self.dijkstra_shortest_path(target)
