@@ -55,6 +55,14 @@ class User < ActiveRecord::Base
     end.to_h
   end
 
+  def self.implicit_edge_weights_map(memo_size=0)
+    lambda{|pair|
+            #TODO add memoization hash here (basically an explicit edge weights map of a subset of frienships)
+            f = Friendship.find_by(follower:pair[0],friend_id:pair[1])
+            f && f.trust_level
+          }
+  end
+
   def self.edge_capacities_map
     self.edge_weights_map.map{|k,v|
       [k,1/(v.to_f)]
@@ -68,11 +76,18 @@ class User < ActiveRecord::Base
     dg.maximum_flow(ewm,self,sink)
   end
 
-  def dijkstra_shortest_path(target)
-    dg = self.class.digraph
-    ewm = self.class.edge_weights_map
+  def dijkstra_shortest_path(target,type=:explicit)
+    case type
+    when :explicit
+      dg = self.class.digraph
+      ewm = self.class.edge_weights_map
+    when :implicit
+      dg = self.class.implicit_digraph
+      ewm = self.class.implicit_edge_weights_map
+    end
     dg.dijkstra_shortest_path(ewm,self,target)
   end
+
 
   def distance(target)
     path = self.dijkstra_shortest_path(target)
@@ -83,6 +98,8 @@ class User < ActiveRecord::Base
     end
     dist
   end
+
+  #====
 
   def self.save_dot_file(filename="network")
     File.open("#{filename}.dot","w") do |f|
