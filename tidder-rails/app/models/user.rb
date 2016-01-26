@@ -69,7 +69,7 @@ class User < ActiveRecord::Base
   end
 
   def maximum_flow(sink)
-    #TODO convert directed graph to non-directed graph for this to work
+    #TODO remove double-relationships for this to work
     dg = self.class.digraph
     ewm = self.class.edge_weights_map
     dg.maximum_flow(ewm,self,sink)
@@ -115,6 +115,18 @@ class User < ActiveRecord::Base
       dist += ewm[pair]
     end
     dist
+  end
+
+  def global_karma
+    followships.inject(0){|memo,f| memo + f.trust_level}
+  end
+
+  def relative_karma(observer)
+    # Returns the relative karma of self from the point of view of the observer
+    followships.inject(0){ |memo,f|
+      weight = observer.distance(self)
+      memo + f.trust_level*(1.0/weight)
+    }
   end
 
   #====
