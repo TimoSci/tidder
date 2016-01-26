@@ -119,6 +119,39 @@ class User < ActiveRecord::Base
 
   #====
 
+  def self.create_sockpuppet_attack(n)
+    swarm = []
+    # create swarm
+    n.times do
+      name = "sockpuppet"+n.to_s
+      new_user = self.create(name:name,password:"xxx",password_confirmation:"xxx")
+      swarm.each do |user|
+        Friendship.create(follower:new_user,friend:user,trust_level:1)
+      end
+      swarm << new_user
+    end
+    # make random connections from existing users
+    users = User.where("NAME not like '%sockpuppet%'")
+    3.times do
+      user = users.sample
+      friend = swarm.sample
+      Friendship.create(follower:user,friend:friend,trust_level:1)
+    end
+  end
+
+  def self.destroy_sockpuppet_attack
+    Friendship.find_each do |friendship|
+      if friendship.follower.name =~ /sockpuppet/
+        friendship.destroy
+      end
+    end
+    User.where("NAME like '%sockpuppet%'").destroy_all
+  end
+
+
+
+  #====
+
   def self.save_dot_file(filename="network")
     File.open("#{filename}.dot","w") do |f|
       f.write dot_file
