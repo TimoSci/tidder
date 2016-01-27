@@ -18,16 +18,28 @@ class User < ActiveRecord::Base
     self.name
   end
 
+  def self.clear_memo
+    @@digraph = nil
+    @@edge_weights_map = nil
+    @@paths = nil
+  end
+
+  clear_memo
+
   def self.digraph
-    return @digraph if @digraph #memoization
+    return @@digraph if @@digraph #memoization
+    digraph!
+  end
+
+  def self.digraph!
     dg = RGL::DirectedAdjacencyGraph[]
-    self.find_each do |user| # unlike #all, #find_each is an Enumerator that doesn't load the entire set of users into memory
+    self.all.each do |user|
       dg.add_vertex(user)
       user.friends.each do |friend|
         dg.add_edge(user,friend)
       end
     end
-    @digraph = dg
+    @@digraph = dg
   end
 
   def self.implicit_digraph
@@ -43,8 +55,12 @@ class User < ActiveRecord::Base
   end
 
   def self.edge_weights_map
-    return @edge_weights_map if @edge_weights_map # memoization
-    @edge_weights_map = Friendship.all.map do |friendship|
+    return @@edge_weights_map if @@edge_weights_map # memoization
+    edge_weights_map!
+  end
+
+  def self.edge_weights_map!
+    @@edge_weights_map = Friendship.all.map do |friendship|
       [
         [
         friendship.follower,
@@ -89,9 +105,10 @@ class User < ActiveRecord::Base
 
   def betweenness_centrality
     total = 0
+    @@paths ||= {}  #memoization
     self.class.find_each do |source|
       self.class.find_each do |target|
-        path = source.dijkstra_shortest_path(target)
+        path = @@paths[[source,target]] ||= source.dijkstra_shortest_path(target)
         total += 1 if path.include?(self)
       end
     end
@@ -109,6 +126,7 @@ class User < ActiveRecord::Base
 
   def distance(target)
     path = self.dijkstra_shortest_path(target)
+    return (1.0/0) if not path
     ewm = self.class.edge_weights_map
     dist = 0
     path.each_cons(2) do |pair|
@@ -134,21 +152,24 @@ class User < ActiveRecord::Base
   def self.create_sockpuppet_attack(n)
     swarm = []
     # create swarm
-    n.times do
-      name = "sockpuppet"+n.to_s
+    n.times do |i|
+      name = "sockpuppet"+i.to_s
       new_user = self.create(name:name,password:"xxx",password_confirmation:"xxx")
       swarm.each do |user|
         Friendship.create(follower:new_user,friend:user,trust_level:1)
+        Friendship.create(follower:user,friend:new_user,trust_level:1)
       end
       swarm << new_user
     end
     # make random connections from existing users
     users = User.where("NAME not like '%sockpuppet%'")
-    3.times do
+    2.times do
       user = users.sample
       friend = swarm.sample
       Friendship.create(follower:user,friend:friend,trust_level:1)
+      Friendship.create(follower:friend,friend:user,trust_level:1)
     end
+    clear_memo
   end
 
   def self.destroy_sockpuppet_attack
@@ -158,6 +179,7 @@ class User < ActiveRecord::Base
       end
     end
     User.where("NAME like '%sockpuppet%'").destroy_all
+    clear_memo
   end
 
 
@@ -171,7 +193,7 @@ class User < ActiveRecord::Base
     system "dot -Tsvg #{filename}.dot -o #{filename}.svg"
   end
 
-  def self.dot_file
+  def self.dot_file(method=:name)
     out = ""
     out << "digraph"
     out << " {"
@@ -180,9 +202,9 @@ class User < ActiveRecord::Base
         user.friends.each do |friend|
           line = ""
           line << "  "
-          line << user.id.to_s
+          line << user.send(method).to_s
           line << " -> "
-          line << friend.id.to_s
+          line << friend.send(method).to_s
           line << ";"
           out << line
           out << "\n"

@@ -17,6 +17,41 @@
   <%= @user.description %>
   </p>
 
+<h3>Users</h3>
+
+<table>
+  <tr>
+    <th>
+      Name
+    </th>
+    <th>
+      Global Karma
+    </th>
+    <th>
+      Relative Karma
+    </th>
+  </tr>
+
+  <% users = User.all - [@user] %>
+  <% users.sort_by{|user| -user.global_karma}.each do |user|%>
+  <tr>
+    <td>
+      <%= link_to user.name, user  %>
+    </td>
+    <td>
+      <%= user.global_karma %>
+    </td>
+    <td>
+      <%=  sprintf('%.2f', user.relative_karma(@user) ) %>
+    </td>
+  </tr>
+  <% end %>
+
+
+
+</table>
+
+
 <h3>My Friends</h3>
 
 <p>
