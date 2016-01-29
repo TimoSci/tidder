@@ -33,7 +33,7 @@ class User < ActiveRecord::Base
 
   def self.digraph!
     dg = RGL::DirectedAdjacencyGraph[]
-    self.all.each do |user|
+    self.includes(:friends).all.each do |user|
       dg.add_vertex(user)
       user.friends.each do |friend|
         dg.add_edge(user,friend)
