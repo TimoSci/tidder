@@ -24,4 +24,20 @@ class UsersController < ApplicationController
     redirect_to users_path
   end
 
+  def d3
+    respond_to do |format|
+      format.html { }
+      format.json {
+        dg = User.digraph
+        @vertices = dg.vertices.map {|user| { name: user.name, group: 1 } }
+        @edges = dg.edges.map do |edge|
+          { source: (edge.source.id - 1),
+            target: (edge.target.id - 1),
+            value: 1 }
+        end
+        render :json => { vertices: @vertices, edges: @edges }
+      }
+    end
+  end
+
 end
