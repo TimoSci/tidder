@@ -1,6 +1,13 @@
 Rails.application.routes.draw do
 
   get 'home/index'
+  get 'users/d3_graph'
+  get 'users/d3_graph_global_karma'
+  get 'users/d3_graph_local_karma_first'
+  get 'users/d3_graph_local_karma_last'
+  get 'users/d3_graph_local_karma_gabriel'
+  get 'users/d3_graph_sockpuppet'
+  get 'users/clear_sockpuppet'
 
   resources :posts
   resources :users
